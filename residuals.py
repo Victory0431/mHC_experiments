@@ -18,11 +18,10 @@ def stable_sinkhorn(logits: torch.Tensor, iters: int = 10, eps: float = 1e-6) ->
     return w.to(logits.dtype)
 
 
-def matrix_errors(w: torch.Tensor) -> tuple[float, float]:
-    with torch.no_grad():
-        w = w.float()
-        row_err = (w.sum(dim=-1) - 1.0).abs().max().item()
-        col_err = (w.sum(dim=-2) - 1.0).abs().max().item()
+def matrix_errors(w: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    w = w.float()
+    row_err = (w.sum(dim=-1) - 1.0).abs().amax()
+    col_err = (w.sum(dim=-2) - 1.0).abs().amax()
     return row_err, col_err
 
 
